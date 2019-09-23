@@ -1,61 +1,62 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
 
-<button class="round-button-circle" onclick="myFunction()">Click me</button>
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
 
-<p id="demo"></p>
+<body>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
-<!--script src="./run.js"></script-->
-    <script type="text/javascript">
-function myFunction() {
- message = new Paho.MQTT.Message("button clicked");
+  <button class="button_shadow" onclick="myFunction()">Click me</button>
+
+  <p id="demo"></p>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+  <!--script src="./run.js"></script-->
+  <script type="text/javascript">
+    function myFunction() {
+      message = new Paho.MQTT.Message("button clicked");
       message.destinationName = "World";
       client.send(message);
-}
+    }
 
 
-var id =  "clientId_" +  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-var msgCounter = 0;
-        
-// Create a client instance        
-client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
-//client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
+    var id = "clientId_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    var msgCounter = 0;
 
-// set callback handlers
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
+    // Create a client instance        
+    client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
+    //client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
 
-// connect the client
-client.connect({onSuccess:onConnect, useSSL: true});
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    // connect the client
+    client.connect({ onSuccess: onConnect, useSSL: true });
 
 
-// called when the client connects
-function onConnect() {
-  // Once a connection has been made, make a subscription and send a message.
-  console.log("onConnect");
-  client.subscribe("World");
-  message = new Paho.MQTT.Message("Hello");
-  message.destinationName = "World";
-  client.send(message);
-}
+    // called when the client connects
+    function onConnect() {
+      // Once a connection has been made, make a subscription and send a message.
+      console.log("onConnect");
+      client.subscribe("World");
+      message = new Paho.MQTT.Message("Hello");
+      message.destinationName = "World";
+      client.send(message);
+    }
 
-// called when the client loses its connection
-function onConnectionLost(responseObject) {
-  if (responseObject.errorCode !== 0) {
-    console.log("onConnectionLost" + id + ":"+responseObject.errorMessage);
-  }
-}
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0) {
+        console.log("onConnectionLost" + id + ":" + responseObject.errorMessage);
+      }
+    }
 
-// called when a message arrives
-function onMessageArrived(message) {
-  console.log("onMessageArrived " + id + ":" + message.payloadString);
-   document.getElementById("demo").innerHTML = ++msgCounter + " "  + id + ":" + message.payloadString;
-}
-    </script>
-    </body
-</html>
+    // called when a message arrives
+    function onMessageArrived(message) {
+      console.log("onMessageArrived " + id + ":" + message.payloadString);
+      document.getElementById("demo").innerHTML = ++msgCounter + " " + id + ":" + message.payloadString;
+    }
+  </script>
+</body </html>
