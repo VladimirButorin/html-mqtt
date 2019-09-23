@@ -19,8 +19,10 @@ function myFunction() {
 }
 
 
+var id =   Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        
 // Create a client instance        
-client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), "clientIdsasdasda");
+client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), "clientId_" + id);
 //client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
 
 // set callback handlers
