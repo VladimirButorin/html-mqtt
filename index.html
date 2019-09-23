@@ -19,10 +19,10 @@ function myFunction() {
 }
 
 
-var id =   Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+var id =  "clientId_" +  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         
 // Create a client instance        
-client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), "clientId_" + id);
+client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
 //client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
 
 // set callback handlers
@@ -46,13 +46,13 @@ function onConnect() {
 // called when the client loses its connection
 function onConnectionLost(responseObject) {
   if (responseObject.errorCode !== 0) {
-    console.log("onConnectionLost:"+responseObject.errorMessage);
+    console.log("onConnectionLost" + id + ":"+responseObject.errorMessage);
   }
 }
 
 // called when a message arrives
 function onMessageArrived(message) {
-  console.log("onMessageArrived:"+message.payloadString);
+  console.log("onMessageArrived " + id + ":" + message.payloadString);
    document.getElementById("demo").innerHTML = message.payloadString;
 }
     </script>
