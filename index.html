@@ -20,6 +20,7 @@ function myFunction() {
 
 
 var id =  "clientId_" +  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+var msgCounter = 0;
         
 // Create a client instance        
 client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
@@ -53,7 +54,7 @@ function onConnectionLost(responseObject) {
 // called when a message arrives
 function onMessageArrived(message) {
   console.log("onMessageArrived " + id + ":" + message.payloadString);
-   document.getElementById("demo").innerHTML = message.payloadString;
+   document.getElementById("demo").innerHTML = msgCounter + " "  + id + ":" + message.payloadString;
 }
     </script>
     </body
