@@ -13,17 +13,23 @@
   <p id="demo"></p>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+
   <!--script src="./run.js"></script-->
+
+
+
   <script type="text/javascript">
+    var id = "clientId_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    var topic = "itup2";
+    var msgCounter = 0;
+    
     function myFunction() {
       message = new Paho.MQTT.Message("button clicked");
-      message.destinationName = "World";
+      message.destinationName = topic;
       client.send(message);
     }
 
 
-    var id = "clientId_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    var msgCounter = 0;
 
     // Create a client instance        
     client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
@@ -41,9 +47,9 @@
     function onConnect() {
       // Once a connection has been made, make a subscription and send a message.
       console.log("onConnect");
-      client.subscribe("World");
+      client.subscribe(topic);
       message = new Paho.MQTT.Message("Hello");
-      message.destinationName = "World";
+      message.destinationName = topic;
       client.send(message);
     }
 
