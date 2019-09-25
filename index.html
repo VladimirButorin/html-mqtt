@@ -8,7 +8,7 @@
 
 <body>
 
-  <button class="button_shadow" onclick="myFunction()">Click</button>
+  <button class="button_shadow" onclick="myFunction()">PTT_1</button>
 
   <p id="demo"></p>
 
@@ -20,27 +20,28 @@
 
   <script type="text/javascript">
     var id = "clientId_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    var topic = "itup2";
+    var topic = "itup2/ptt";
     var msgCounter = 0;
     
     function myFunction() {
-      message = new Paho.MQTT.Message("button clicked");
+      message = new Paho.MQTT.Message("1");
       message.destinationName = topic;
       client.send(message);
     }
 
-
+	// spec is here:
+	//https://www.eclipse.org/paho/files/jsdoc/Paho.MQTT.Client.html
 
     // Create a client instance        
-    client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
-    //client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
+    //client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
+    client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
 
     // set callback handlers
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
 
     // connect the client
-    client.connect({ onSuccess: onConnect, useSSL: true });
+    client.connect({ onSuccess: onConnect, useSSL: false });
 
 
     // called when the client connects
