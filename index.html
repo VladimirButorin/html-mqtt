@@ -7,10 +7,43 @@
 </head>
 
 <body>
-
-  <button class="button_shadow" onclick="myFunction()">PTT_1</button>
-
   <p id="demo"></p>
+  <br>
+  <button class="button_shadow" onclick="myFunction()">PTT_1</button>
+ 
+  <br>
+  <div id="apps">
+    <input type="radio" id="apps_bhd" name="apps" checked="checked"> BehindDriver
+    <br>
+    <input type="radio" id="apps_ext" name="apps" > Outer
+    <br>
+    <input type="radio" id="apps_tablet" name="apps"  > Private  
+  </div>
+    <br>
+
+   
+
+  <input type="range" min="0" max="1000" step="1" value="1000" class="slider" id="opacity_range">
+  <p>opacity: <span id="outputopacity_range"></span></p>
+  </div>
+  
+  <input type="range" min="-10000" max="10000" step="1" value="0" class="slider" id="scale_range">
+  <p>scale delta: <span id="outputscale_range"></span></p>
+  </div>
+  
+  <input type="range" min="-360000" max="360000" step="1" value="0" class="slider" id="rotaion_range">
+  <p>rotation delta: <span id="outputrotaion_range"></span></p>
+  </div>
+  
+  <input type="range" min="-1000000" max="1000000" step="1" value="0" class="slider" id="offsetX_range">
+  <p>OffsetX delta: <span id="outputoffsetX_range"></span></p>
+  </div>
+  
+  <input type="range" min="-1000000" max="1000000" step="1" value="0" class="slider" id="offsetY_range">
+  <p>offsetY delta: <span id="outputoffsetY_range"></span></p>
+  </div>
+
+  
 
   <script src="./mqttws31.js"></script>
 
@@ -21,7 +54,127 @@
   <script type="text/javascript">
     var id = "clientId_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     var topic = "itup2/ptt";
+    var topicAppBehindDriver = "itup2/app/behinddriver"
+    var topicAppExternal = "itup2/app/external"
+    var topicAppTablet = "itup2/app/tablet"
     var msgCounter = 0;
+
+    var slider_opacity = document.getElementById("opacity_range");
+    var slider_scale = document.getElementById("scale_range");
+    var slider_rotation = document.getElementById("rotaion_range");
+    var slider_offsetX = document.getElementById("offsetX_range");
+    var slider_offsetY = document.getElementById("offsetY_range");;
+
+    var output_opacity = document.getElementById("outputopacity_range");
+    var output_scale = document.getElementById("outputscale_range");
+    var output_rotation = document.getElementById("outputrotaion_range");
+    var output_offsetX = document.getElementById("outputoffsetX_range");
+    var output_offsetY = document.getElementById("outputoffsetY_range");
+
+    output_opacity.innerHTML = slider_opacity.value / 1000;
+    output_scale.innerHTML = slider_scale.value;
+    output_rotation.innerHTML = slider_rotation.value;
+    output_offsetX.innerHTML = slider_offsetX.value;
+    output_offsetY.innerHTML = slider_offsetY.value;
+
+    slider_opacity.oninput = function() {
+      var val = parseFloat(this.value) / 1000;
+      val = val.toFixed(3);
+      var topicName =  "";
+      output_opacity.innerHTML = val
+      var message = new Paho.MQTT.Message(val);
+      if (document.getElementById('apps_bhd').checked) {
+        topicName += topicAppBehindDriver;
+      } else if (document.getElementById('apps_ext').checked) {
+        topicName += topicAppExternal;
+      } else if (document.getElementById('apps_tablet').checked) {
+        topicName += topicAppTablet;
+      }
+      topicName += "/opacity";
+     
+      message.destinationName = topicName;
+      client.send(message);
+    }
+
+    slider_scale.oninput = function() {
+      var val = parseFloat(this.value) / 1000;
+      val = val.toFixed(3);
+      var topicName =  "";
+      output_scale.innerHTML = val
+      var message = new Paho.MQTT.Message(val);
+      if (document.getElementById('apps_bhd').checked) {
+        topicName += topicAppBehindDriver;
+      } else if (document.getElementById('apps_ext').checked) {
+        topicName += topicAppExternal;
+      } else if (document.getElementById('apps_tablet').checked) {
+        topicName += topicAppTablet;
+      }
+
+      topicName += "/scale";
+     
+      message.destinationName = topicName;
+      client.send(message);
+    }
+
+    slider_rotation.oninput = function() {
+      var val = parseFloat(this.value) / 1000;
+      val = val.toFixed(3);
+      var topicName =  "";
+      output_rotation.innerHTML = val
+      var message = new Paho.MQTT.Message(val);
+      if (document.getElementById('apps_bhd').checked) {
+        topicName += topicAppBehindDriver;
+      } else if (document.getElementById('apps_ext').checked) {
+        topicName += topicAppExternal;
+      } else if (document.getElementById('apps_tablet').checked) {
+        topicName += topicAppTablet;
+      }
+     
+      topicName += "/rotation";
+     
+      message.destinationName = topicName;
+      client.send(message);
+    }
+
+    slider_offsetX.oninput = function() {
+      var val = parseFloat(this.value) / 1000;
+      val = val.toFixed(3);
+      var topicName =  "";
+      output_offsetX.innerHTML = val
+      var message = new Paho.MQTT.Message(val);
+      if (document.getElementById('apps_bhd').checked) {
+        topicName += topicAppBehindDriver;
+      } else if (document.getElementById('apps_ext').checked) {
+        topicName += topicAppExternal;
+      } else if (document.getElementById('apps_tablet').checked) {
+        topicName += topicAppTablet;
+      }
+      topicName += "/offsetX";
+
+      message.destinationName = topicName;
+      client.send(message);
+    }
+
+
+    slider_offsetY.oninput = function() {
+      var val = parseFloat(this.value) / 1000;
+      val = val.toFixed(3);
+      var topicName =  "";
+      output_offsetY.innerHTML = val
+      var message = new Paho.MQTT.Message(val);
+      if (document.getElementById('apps_bhd').checked) {
+        topicName += topicAppBehindDriver;
+      } else if (document.getElementById('apps_ext').checked) {
+        topicName += topicAppExternal;
+      } else if (document.getElementById('apps_tablet').checked) {
+        topicName += topicAppTablet;
+      }
+
+      topicName += "/offsetY";
+      
+      message.destinationName = topicName;
+      client.send(message);
+    }
     
     function myFunction() {
       message = new Paho.MQTT.Message("1");
@@ -34,7 +187,8 @@
 
     // Create a client instance        
     //client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
-    client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
+    //client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
+    client = new Paho.MQTT.Client("localhost", Number("9001"), "clientId");
 
     // set callback handlers
     client.onConnectionLost = onConnectionLost;
