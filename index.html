@@ -22,25 +22,69 @@
     <br>
 
    
+    <div>
+  <input  type="range" 
+          min="0" 
+          max="1000" 
+          step="1" 
+          value="1000" 
+          class="slider" 
+          id="opacity_range"
+          onchange="onOpacityChange(value)"
+  >
+    <p>opacity: <span id="outputopacity_range"></span></p>
+  </div>
 
-  <input type="range" min="0" max="1000" step="1" value="1000" class="slider" id="opacity_range">
-  <p>opacity: <span id="outputopacity_range"></span></p>
+  <div> 
+    <input  type="range" 
+            min="-10000" 
+            max="10000" 
+            step="1" 
+            value="0"  
+            class="slider" 
+            id="scale_range"
+            onchange="onScaleChange(value)"
+    >
+    <p>scale delta: <span id="outputscale_range"></span></p>
+  </div>
+
+  <div>
+    <input  type="range" 
+            min="-360000" 
+            max="360000" 
+            step="1" 
+            value="0" 
+            class="slider" 
+            id="rotaion_range"
+            onchange="onRotationChange(value)"
+      >
+    <p>rotation delta: <span id="outputrotaion_range"></span></p>
+  </div>
+
+  <div>
+    <input  type="range" 
+            min="-1000000"
+            max="1000000" 
+            step="1" 
+            value="0" 
+            class="slider" 
+            id="offsetX_range"
+            onchange="onOffsetXChange(value)"
+    >
+    <p>OffsetX delta: <span id="outputoffsetX_range"></span></p>
   </div>
   
-  <input type="range" min="-10000" max="10000" step="1" value="0" class="slider" id="scale_range">
-  <p>scale delta: <span id="outputscale_range"></span></p>
-  </div>
-  
-  <input type="range" min="-360000" max="360000" step="1" value="0" class="slider" id="rotaion_range">
-  <p>rotation delta: <span id="outputrotaion_range"></span></p>
-  </div>
-  
-  <input type="range" min="-1000000" max="1000000" step="1" value="0" class="slider" id="offsetX_range">
-  <p>OffsetX delta: <span id="outputoffsetX_range"></span></p>
-  </div>
-  
-  <input type="range" min="-1000000" max="1000000" step="1" value="0" class="slider" id="offsetY_range">
-  <p>offsetY delta: <span id="outputoffsetY_range"></span></p>
+  <div>
+    <input  type="range" 
+            min="-1000000" 
+            max="1000000" 
+            step="1"
+            value="0" 
+            class="slider" 
+            id="offsetY_range"
+            onchange="onOffsetYChange(value)"
+    >
+    <p>offsetY delta: <span id="outputoffsetY_range"></span></p>
   </div>
 
   
@@ -77,8 +121,23 @@
     output_offsetX.innerHTML = slider_offsetX.value;
     output_offsetY.innerHTML = slider_offsetY.value;
 
-    slider_opacity.oninput = function() {
-      var val = parseFloat(this.value) / 1000;
+    	// spec is here:
+	//https://www.eclipse.org/paho/files/jsdoc/Paho.MQTT.Client.html
+
+    // Create a client instance        
+    //client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
+    //client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
+    var client = new Paho.MQTT.Client("127.0.0.1", Number("9001"), "clientId");
+
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    // connect the client
+    client.connect({ onSuccess: onConnect, useSSL: false });
+
+    function onOpacityChange(value) {
+      var val = parseFloat(value) / 1000;
       val = val.toFixed(3);
       var topicName =  "";
       output_opacity.innerHTML = val
@@ -96,8 +155,8 @@
       client.send(message);
     }
 
-    slider_scale.oninput = function() {
-      var val = parseFloat(this.value) / 1000;
+    function onScaleChange(value) {
+      var val = parseFloat(value) / 1000;
       val = val.toFixed(3);
       var topicName =  "";
       output_scale.innerHTML = val
@@ -116,8 +175,8 @@
       client.send(message);
     }
 
-    slider_rotation.oninput = function() {
-      var val = parseFloat(this.value) / 1000;
+    function onRotationChange(value) {
+      var val = parseFloat(value) / 1000;
       val = val.toFixed(3);
       var topicName =  "";
       output_rotation.innerHTML = val
@@ -136,8 +195,8 @@
       client.send(message);
     }
 
-    slider_offsetX.oninput = function() {
-      var val = parseFloat(this.value) / 1000;
+    function onOffsetXChange(value) {
+      var val = parseFloat(value) / 1000;
       val = val.toFixed(3);
       var topicName =  "";
       output_offsetX.innerHTML = val
@@ -156,8 +215,8 @@
     }
 
 
-    slider_offsetY.oninput = function() {
-      var val = parseFloat(this.value) / 1000;
+    function onOffsetYChange(value) {
+      var val = parseFloat(value) / 1000;
       val = val.toFixed(3);
       var topicName =  "";
       output_offsetY.innerHTML = val
@@ -175,27 +234,19 @@
       message.destinationName = topicName;
       client.send(message);
     }
+
+    
+    slider_opacity.oninput = onOpacityChange;
+    slider_scale.oninput = onScaleChange;
+    slider_rotation.oninput = onRotationChange
+    slider_offsetY.oninput = onOffsetYChange
+    slider_offsetX.oninput = onOffsetXChange
     
     function myFunction() {
       message = new Paho.MQTT.Message("1");
       message.destinationName = topic;
       client.send(message);
     }
-
-	// spec is here:
-	//https://www.eclipse.org/paho/files/jsdoc/Paho.MQTT.Client.html
-
-    // Create a client instance        
-    //client = new Paho.MQTT.Client("test.mosquitto.org", Number("8081"), id);
-    //client = new Paho.MQTT.Client("innoteamserver2", Number("1883"), "clientId");
-    client = new Paho.MQTT.Client("localhost", Number("9001"), "clientId");
-
-    // set callback handlers
-    client.onConnectionLost = onConnectionLost;
-    client.onMessageArrived = onMessageArrived;
-
-    // connect the client
-    client.connect({ onSuccess: onConnect, useSSL: false });
 
 
     // called when the client connects
