@@ -235,12 +235,34 @@
       client.send(message);
     }
 
+
+    function onOpacityChangeInt()  {
+      var value = this.value
+      onOpacityChange(value)
+    }
+
+    function onScaleChangeInt() {
+      var value = this.value    
+      onScaleChange(value)  
+    }
+    function onRotationChangeInt() {
+      var value = this.value      
+      onRotationChange(value)
+    }
+    function onOffsetYChangeInt() {
+      var value = this.value
+      onOffsetYChange(value)
+    }
+    function onOffsetXChangeInt() {
+      var value = this.value
+      onOffsetXChange(value)
+    }
     
-    slider_opacity.oninput = onOpacityChange;
-    slider_scale.oninput = onScaleChange;
-    slider_rotation.oninput = onRotationChange
-    slider_offsetY.oninput = onOffsetYChange
-    slider_offsetX.oninput = onOffsetXChange
+    slider_opacity.oninput = onOpacityChangeInt;
+    slider_scale.oninput = onScaleChangeInt;
+    slider_rotation.oninput = onRotationChangeInt
+    slider_offsetY.oninput = onOffsetYChangeInt
+    slider_offsetX.oninput = onOffsetXChangeInt
     
     function myFunction() {
       message = new Paho.MQTT.Message("1");
